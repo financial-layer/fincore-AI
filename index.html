@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Fincore AI — Tus datos financieros, unificados e inteligentes</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Inter', 'sans-serif'] },
+          colors: {
+            primary:   '#1E40AF',
+            secondary: '#3B82F6',
+            accent:    '#60A5FA',
+            dark:      '#0F172A',
+            surface:   '#F8FAFC',
+          },
+        },
+      },
+    }
+  </script>
+  <style>
+    html { font-family: 'Inter', sans-serif; }
+    .gradient-hero {
+      background: linear-gradient(135deg, #0F172A 0%, #1E3A8A 50%, #1E40AF 100%);
+    }
+    .card-hover {
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .card-hover:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 20px 40px rgba(30,64,175,0.15);
+    }
+    .nav-blur {
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+    }
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50%       { transform: translateY(-10px); }
+    }
+    .float-anim { animation: float 4s ease-in-out infinite; }
+    @keyframes pulse-ring {
+      0%   { box-shadow: 0 0 0 0 rgba(96,165,250,0.4); }
+      70%  { box-shadow: 0 0 0 16px rgba(96,165,250,0); }
+      100% { box-shadow: 0 0 0 0 rgba(96,165,250,0); }
+    }
+    .pulse-ring { animation: pulse-ring 2s infinite; }
+  </style>
+</head>
+<body class="bg-surface text-dark antialiased">
+
+<!-- ─────────────────────────────────────────────
+     NAVBAR
+───────────────────────────────────────────── -->
+<header id="navbar" class="fixed top-0 left-0 right-0 z-50 nav-blur bg-dark/80 border-b border-white/10">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex items-center justify-between h-16">
+
+      <!-- Logo -->
+      <div class="flex items-center gap-2">
+        <div class="w-8 h-8 bg-secondary rounded-lg flex items-center justify-center pulse-ring">
+          <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+          </svg>
+        </div>
+        <span class="text-white font-bold text-lg tracking-tight">Fincore <span class="text-accent">AI</span></span>
+      </div>
+
+      <!-- Nav links (desktop) -->
+      <nav class="hidden md:flex items-center gap-8">
+        <a href="#features"      class="text-slate-300 hover:text-white text-sm font-medium transition-colors">Características</a>
+        <a href="#integrations"  class="text-slate-300 hover:text-white text-sm font-medium transition-colors">Integraciones</a>
+        <a href="#pricing"       class="text-slate-300 hover:text-white text-sm font-medium transition-colors">Precios</a>
+        <a href="#contact"       class="text-slate-300 hover:text-white text-sm font-medium transition-colors">Contacto</a>
+      </nav>
+
+      <!-- CTA + mobile toggle -->
+      <div class="flex items-center gap-3">
+        <a href="#contact"
+           class="hidden sm:inline-flex items-center px-4 py-2 bg-secondary hover:bg-primary text-white text-sm font-semibold rounded-lg transition-colors">
+          Solicitar demo
+        </a>
+        <!-- Hamburger -->
+        <button id="menu-btn" class="md:hidden text-slate-300 hover:text-white">
+          <svg id="icon-open" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+          </svg>
+          <svg id="icon-close" class="w-6 h-6 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Mobile menu -->
+    <div id="mobile-menu" class="hidden md:hidden pb-4 border-t border-white/10 mt-2 pt-4 flex flex-col gap-4">
+      <a href="#features"     class="text-slate-300 hover:text-white text-sm font-medium" onclick="closeMenu()">Características</a>
+      <a href="#integrations" class="text-slate-300 hover:text-white text-sm font-medium" onclick="closeMenu()">Integraciones</a>
+      <a href="#pricing"      class="text-slate-300 hover:text-white text-sm font-medium" onclick="closeMenu()">Precios</a>
+      <a href="#contact"      class="text-slate-300 hover:text-white text-sm font-medium" onclick="closeMenu()">Contacto</a>
+      <a href="#contact" class="inline-flex justify-center px-4 py-2 bg-secondary text-white text-sm font-semibold rounded-lg">Solicitar demo</a>
+    </div>
+  </div>
+</header>
+
+<!-- ─────────────────────────────────────────────
+     HERO
+───────────────────────────────────────────── -->
+<section class="gradient-hero min-h-screen flex items-center pt-16">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 lg:py-32">
+    <div class="grid lg:grid-cols-2 gap-16 items-center">
+
+      <!-- Text -->
+      <div>
+        <span class="inline-flex items-center gap-2 px-3 py-1 bg-secondary/20 border border-secondary/30 rounded-full text-accent text-xs font-semibold mb-6">
+          <span class="w-2 h-2 bg-accent rounded-full"></span>
+          Inteligencia Artificial Financiera
+        </span>
+        <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white leading-tight mb-6">
+          Unifica tu contabilidad.<br/>
+          <span class="text-transparent bg-clip-text bg-gradient-to-r from-accent to-secondary">
+            Predice tu futuro financiero.
+          </span>
+        </h1>
+        <p class="text-slate-300 text-lg leading-relaxed mb-10 max-w-lg">
+          Fincore AI conecta tu Holded, SAGE y otros ERPs en una sola plataforma,
+          aplica IA para predecir tesorería y resultados, y permite a las asesorías
+          descargar y presentar modelos tributarios de forma automática.
+        </p>
+        <div class="flex flex-col sm:flex-row gap-4">
+          <a href="#contact"
+             class="inline-flex justify-center items-center px-6 py-3 bg-secondary hover:bg-blue-600 text-white font-semibold rounded-xl transition-colors text-base shadow-lg shadow-blue-900/40">
+            Empieza gratis
+            <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+            </svg>
+          </a>
+          <a href="#features"
+             class="inline-flex justify-center items-center px-6 py-3 border border-white/20 hover:border-white/40 text-white font-semibold rounded-xl transition-colors text-base">
+            Ver características
+          </a>
+        </div>
+
+        <!-- Stats -->
+        <div class="mt-14 grid grid-cols-3 gap-6 border-t border-white/10 pt-10">
+          <div>
+            <div class="text-2xl font-bold text-white">+50</div>
+            <div class="text-slate-400 text-xs mt-1">Asesorías activas</div>
+          </div>
+          <div>
+            <div class="text-2xl font-bold text-white">6</div>
+            <div class="text-slate-400 text-xs mt-1">ERPs integrados</div>
+          </div>
+          <div>
+            <div class="text-2xl font-bold text-white">99.9%</div>
+            <div class="text-slate-400 text-xs mt-1">Uptime garantizado</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Dashboard mockup -->
+      <div class="hidden lg:block float-anim">
+        <div class="bg-slate-800/60 border border-white/10 rounded-2xl p-6 shadow-2xl">
+          <!-- Header mockup -->
+          <div class="flex items-center justify-between mb-6">
+            <div>
+              <div class="text-white font-semibold text-sm">Panel financiero</div>
+              <div class="text-slate-400 text-xs">Actualizado hace 2 min</div>
+            </div>
+            <span class="px-2 py-1 bg-emerald-500/20 text-emerald-400 text-xs rounded-full border border-emerald-500/30">En vivo</span>
+          </div>
+
+          <!-- KPI cards -->
+          <div class="grid grid-cols-2 gap-3 mb-6">
+            <div class="bg-slate-700/50 rounded-xl p-4 border border-white/5">
+              <div class="text-slate-400 text-xs mb-1">Tesorería prevista</div>
+              <div class="text-white font-bold text-xl">€128.450</div>
+              <div class="text-emerald-400 text-xs mt-1">▲ +12% vs mes anterior</div>
+            </div>
+            <div class="bg-slate-700/50 rounded-xl p-4 border border-white/5">
+              <div class="text-slate-400 text-xs mb-1">Flujo de caja</div>
+              <div class="text-white font-bold text-xl">€34.200</div>
+              <div class="text-emerald-400 text-xs mt-1">▲ +8% vs mes anterior</div>
+            </div>
+          </div>
+
+          <!-- Chart bars -->
+          <div class="bg-slate-700/30 rounded-xl p-4 border border-white/5 mb-4">
+            <div class="text-slate-400 text-xs mb-3">Predicción — próximos 6 meses</div>
+            <div class="flex items-end gap-2 h-20">
+              <div class="flex-1 bg-secondary/60 rounded-t" style="height:55%"></div>
+              <div class="flex-1 bg-secondary/60 rounded-t" style="height:70%"></div>
+              <div class="flex-1 bg-secondary/80 rounded-t" style="height:60%"></div>
+              <div class="flex-1 bg-accent/80 rounded-t" style="height:85%"></div>
+              <div class="flex-1 bg-accent/80 rounded-t" style="height:75%"></div>
+              <div class="flex-1 bg-accent rounded-t border border-accent/40" style="height:100%"></div>
+            </div>
+            <div class="flex justify-between text-slate-500 text-xs mt-2">
+              <span>Ene</span><span>Feb</span><span>Mar</span><span>Abr</span><span>May</span><span>Jun</span>
+            </div>
+          </div>
+
+          <!-- Modelos tributarios -->
+          <div class="space-y-2">
+            <div class="text-slate-400 text-xs mb-2">Modelos tributarios</div>
+            <div class="flex items-center justify-between bg-slate-700/30 rounded-lg px-3 py-2 border border-white/5">
+              <div class="flex items-center gap-2">
+                <div class="w-6 h-6 bg-blue-500/20 rounded flex items-center justify-center">
+                  <svg class="w-3 h-3 text-accent" fill="currentColor" viewBox="0 0 20 20"><path d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4z"/></svg>
+                </div>
+                <span class="text-white text-xs">Modelo 303 — IVA</span>
+              </div>
+              <span class="text-emerald-400 text-xs">Listo</span>
+            </div>
+            <div class="flex items-center justify-between bg-slate-700/30 rounded-lg px-3 py-2 border border-white/5">
+              <div class="flex items-center gap-2">
+                <div class="w-6 h-6 bg-blue-500/20 rounded flex items-center justify-center">
+                  <svg class="w-3 h-3 text-accent" fill="currentColor" viewBox="0 0 20 20"><path d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4z"/></svg>
+                </div>
+                <span class="text-white text-xs">Modelo 347 — Operaciones</span>
+              </div>
+              <span class="text-yellow-400 text-xs">Pendiente</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─────────────────────────────────────────────
+     FEATURES
+───────────────────────────────────────────── -->
+<section id="features" class="py-24 bg-white">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="text-center mb-16">
+      <span class="text-secondary text-sm font-semibold tracking-widest uppercase">Características</span>
+      <h2 class="mt-3 text-3xl sm:text-4xl font-extrabold text-dark">Todo lo que necesitas en una plataforma</h2>
+      <p class="mt-4 text-slate-500 max-w-2xl mx-auto text-lg">Fincore AI centraliza, analiza y anticipa tu información financiera para que tomes mejores decisiones.</p>
+    </div>
+
+    <div class="grid md:grid-cols-3 gap-8">
+
+      <!-- Feature 1 -->
+      <div class="card-hover bg-surface border border-slate-200 rounded-2xl p-8">
+        <div class="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center mb-6">
+          <svg class="w-6 h-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M4 7v10c0 2 1 3 3 3h10c2 0 3-1 3-3V7M4 7c0-2 1-3 3-3h10c2 0 3 1 3 3M4 7h16M9 11h6"/>
+          </svg>
+        </div>
+        <h3 class="text-dark font-bold text-xl mb-3">Agregación de ERPs</h3>
+        <p class="text-slate-500 leading-relaxed">Conecta Holded, SAGE, Odoo, A3 y otros en un panel unificado. Sin exportaciones manuales, sin datos duplicados.</p>
+        <ul class="mt-5 space-y-2">
+          <li class="flex items-center gap-2 text-sm text-slate-600">
+            <svg class="w-4 h-4 text-emerald-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
+            Sincronización en tiempo real
+          </li>
+          <li class="flex items-center gap-2 text-sm text-slate-600">
+            <svg class="w-4 h-4 text-emerald-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
+            Mapeo automático de cuentas contables
+          </li>
+          <li class="flex items-center gap-2 text-sm text-slate-600">
+            <svg class="w-4 h-4 text-emerald-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
+            API REST abierta para integraciones custom
+          </li>
+        </ul>
+      </div>
+
+      <!-- Feature 2 -->
+      <div class="card-hover bg-primary border border-primary rounded-2xl p-8 text-white relative overflow-hidden">
+        <div class="absolute -top-8 -right-8 w-32 h-32 bg-white/5 rounded-full"></div>
+        <div class="absolute -bottom-4 -left-4 w-20 h-20 bg-white/5 rounded-full"></div>
+        <div class="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center mb-6 relative z-10">
+          <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/>
+          </svg>
+        </div>
+        <div class="relative z-10">
+          <span class="inline-flex items-center px-2 py-0.5 bg-accent/30 rounded text-accent text-xs font-semibold mb-3">IA Avanzada</span>
+          <h3 class="text-white font-bold text-xl mb-3">Predicción con IA</h3>
+          <p class="text-blue-200 leading-relaxed">Modelos de machine learning entrenados con tus datos históricos para predecir tesorería, P&L y flujo de caja con alta precisión.</p>
+          <ul class="mt-5 space-y-2">
+            <li class="flex items-center gap-2 text-sm text-blue-100">
+              <svg class="w-4 h-4 text-accent flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
+              Forecast a 3, 6 y 12 meses
+            </li>
+            <li class="flex items-center gap-2 text-sm text-blue-100">
+              <svg class="w-4 h-4 text-accent flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
+              Alertas de desviación automáticas
+            </li>
+            <li class="flex items-center gap-2 text-sm text-blue-100">
+              <svg class="w-4 h-4 text-accent flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
+              Escenarios what-if configurables
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Feature 3 -->
+      <div class="card-hover bg-surface border border-slate-200 rounded-2xl p-8">
+        <div class="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center mb-6">
+          <svg class="w-6 h-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+          </svg>
+        </div>
+        <h3 class="text-dark font-bold text-xl mb-3">Modelos tributarios</h3>
+        <p class="text-slate-500 leading-relaxed">Genera, descarga y presenta ante la AEAT los principales modelos tributarios directamente desde la plataforma.</p>
+        <ul class="mt-5 space-y-2">
+          <li class="flex items-center gap-2 text-sm text-slate-600">
+            <svg class="w-4 h-4 text-emerald-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
+            Modelo 303 (IVA trimestral)
+          </li>
+          <li class="flex items-center gap-2 text-sm text-slate-600">
+            <svg class="w-4 h-4 text-emerald-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
+            Modelo 347 (operaciones con terceros)
+          </li>
+          <li class="flex items-center gap-2 text-sm text-slate-600">
+            <svg class="w-4 h-4 text-emerald-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
+            Modelo 200 (Impuesto de Sociedades)
+          </li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ─────────────────────────────────────────────
+     INTEGRATIONS
+───────────────────────────────────────────── -->
+<section id="integrations" class="py-24 bg-slate-50">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="text-center mb-16">
+      <span class="text-secondary text-sm font-semibold tracking-widest uppercase">Integraciones</span>
+      <h2 class="mt-3 text-3xl sm:text-4xl font-extrabold text-dark">Compatible con tu ERP actual</h2>
+      <p class="mt-4 text-slate-500 max-w-xl mx-auto text-lg">Conecta Fincore AI con las herramientas que ya usas en minutos, sin migraciones ni cambios de proceso.</p>
+    </div>
+
+    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4 mb-10">
+
+      <!-- Holded -->
+      <div class="card-hover bg-white border border-slate-200 rounded-xl p-5 flex flex-col items-center gap-3 shadow-sm">
+        <div class="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center">
+          <span class="text-green-600 font-black text-lg">H</span>
+        </div>
+        <div class="text-center">
+          <div class="text-dark font-semibold text-sm">Holded</div>
+          <div class="text-emerald-500 text-xs mt-0.5">Disponible</div>
+        </div>
+      </div>
+
+      <!-- SAGE -->
+      <div class="card-hover bg-white border border-slate-200 rounded-xl p-5 flex flex-col items-center gap-3 shadow-sm">
+        <div class="w-12 h-12 bg-green-600 rounded-xl flex items-center justify-center">
+          <span class="text-white font-black text-lg">S</span>
+        </div>
+        <div class="text-center">
+          <div class="text-dark font-semibold text-sm">SAGE</div>
+          <div class="text-emerald-500 text-xs mt-0.5">Disponible</div>
+        </div>
+      </div>
+
+      <!-- Odoo -->
+      <div class="card-hover bg-white border border-slate-200 rounded-xl p-5 flex flex-col items-center gap-3 shadow-sm">
+        <div class="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center">
+          <span class="text-purple-600 font-black text-lg">O</span>
+        </div>
+        <div class="text-center">
+          <div class="text-dark font-semibold text-sm">Odoo</div>
+          <div class="text-emerald-500 text-xs mt-0.5">Disponible</div>
+        </div>
+      </div>
+
+      <!-- A3 -->
+      <div class="card-hover bg-white border border-slate-200 rounded-xl p-5 flex flex-col items-center gap-3 shadow-sm">
+        <div class="w-12 h-12 bg-orange-100 rounded-xl flex items-center justify-center">
+          <span class="text-orange-600 font-black text-lg">A3</span>
+        </div>
+        <div class="text-center">
+          <div class="text-dark font-semibold text-sm">A3</div>
+          <div class="text-emerald-500 text-xs mt-0.5">Disponible</div>
+        </div>
+      </div>
+
+      <!-- ContaPlus -->
+      <div class="card-hover bg-white border border-slate-200 rounded-xl p-5 flex flex-col items-center gap-3 shadow-sm">
+        <div class="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center">
+          <span class="text-blue-600 font-black text-sm">CP</span>
+        </div>
+        <div class="text-center">
+          <div class="text-dark font-semibold text-sm">ContaPlus</div>
+          <div class="text-yellow-500 text-xs mt-0.5">Próximamente</div>
+        </div>
+      </div>
+
+      <!-- Excel / CSV -->
+      <div class="card-hover bg-white border border-slate-200 rounded-xl p-5 flex flex-col items-center gap-3 shadow-sm">
+        <div class="w-12 h-12 bg-emerald-100 rounded-xl flex items-center justify-center">
+          <svg class="w-6 h-6 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+          </svg>
+        </div>
+        <div class="text-center">
+          <div class="text-dark font-semibold text-sm">Excel / CSV</div>
+          <div class="text-emerald-500 text-xs mt-0.5">Disponible</div>
+        </div>
+      </div>
+
+    </div>
+
+    <p class="text-center text-slate-400 text-sm">
+      ¿No ves tu ERP? <a href="#contact" class="text-secondary hover:underline font-medium">Contáctanos</a> — ampliamos integraciones continuamente.
+    </p>
+  </div>
+</section>
+
+<!-- ─────────────────────────────────────────────
+     PRICING
+───────────────────────────────────────────── -->
+<section id="pricing" class="py-24 bg-white">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="text-center mb-12">
+      <span class="text-secondary text-sm font-semibold tracking-widest uppercase">Precios</span>
+      <h2 class="mt-3 text-3xl sm:text-4xl font-extrabold text-dark">Planes para cada asesoría</h2>
+      <p class="mt-4 text-slate-500 max-w-xl mx-auto text-lg">Sin costes ocultos. Cancela cuando quieras.</p>
+
+      <!-- Toggle mensual/anual -->
+      <div class="mt-8 inline-flex items-center gap-4 bg-slate-100 rounded-xl p-1.5">
+        <button id="btn-monthly" onclick="setBilling('monthly')"
+          class="px-5 py-2 rounded-lg text-sm font-semibold transition-all bg-white text-dark shadow-sm">
+          Mensual
+        </button>
+        <button id="btn-annual" onclick="setBilling('annual')"
+          class="px-5 py-2 rounded-lg text-sm font-semibold transition-all text-slate-500">
+          Anual <span class="text-emerald-500 font-bold">-20%</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+
+      <!-- Starter -->
+      <div class="card-hover border border-slate-200 rounded-2xl p-8 flex flex-col">
+        <div class="mb-6">
+          <h3 class="font-bold text-dark text-lg">Starter</h3>
+          <p class="text-slate-400 text-sm mt-1">Ideal para pequeñas asesorías</p>
+          <div class="mt-5">
+            <span class="text-4xl font-extrabold text-dark">
+              <span class="price" data-monthly="49" data-annual="39">€49</span>
+            </span>
+            <span class="text-slate-400 text-sm">/mes</span>
+          </div>
+        </div>
+        <ul class="space-y-3 flex-1 mb-8">
+          <li class="flex items-start gap-2 text-sm text-slate-600"><svg class="w-5 h-5 text-emerald-500 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>Hasta 5 empresas</li>
+          <li class="flex items-start gap-2 text-sm text-slate-600"><svg class="w-5 h-5 text-emerald-500 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>2 integraciones ERP</li>
+          <li class="flex items-start gap-2 text-sm text-slate-600"><svg class="w-5 h-5 text-emerald-500 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>Predicción IA básica (3 meses)</li>
+          <li class="flex items-start gap-2 text-sm text-slate-600"><svg class="w-5 h-5 text-emerald-500 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>Descarga modelos tributarios</li>
+          <li class="flex items-start gap-2 text-sm text-slate-400"><svg class="w-5 h-5 text-slate-300 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>Presentación telemática (no incluida)</li>
+        </ul>
+        <a href="#contact" class="block text-center py-3 px-6 border border-secondary text-secondary hover:bg-secondary hover:text-white font-semibold rounded-xl transition-colors text-sm">Empezar gratis</a>
+      </div>
+
+      <!-- Pro (destacado) -->
+      <div class="card-hover bg-primary border border-primary rounded-2xl p-8 flex flex-col relative shadow-xl shadow-blue-900/20">
+        <div class="absolute -top-4 left-1/2 -translate-x-1/2">
+          <span class="bg-accent text-dark text-xs font-bold px-4 py-1.5 rounded-full shadow">Más popular</span>
+        </div>
+        <div class="mb-6">
+          <h3 class="font-bold text-white text-lg">Pro</h3>
+          <p class="text-blue-300 text-sm mt-1">Ideal para asesorías medianas</p>
+          <div class="mt-5">
+            <span class="text-4xl font-extrabold text-white">
+              <span class="price" data-monthly="129" data-annual="103">€129</span>
+            </span>
+            <span class="text-blue-300 text-sm">/mes</span>
+          </div>
+        </div>
+        <ul class="space-y-3 flex-1 mb-8">
+          <li class="flex items-start gap-2 text-sm text-blue-100"><svg class="w-5 h-5 text-accent flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>Empresas ilimitadas</li>
+          <li class="flex items-start gap-2 text-sm text-blue-100"><svg class="w-5 h-5 text-accent flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>Todos los ERPs incluidos</li>
+          <li class="flex items-start gap-2 text-sm text-blue-100"><svg class="w-5 h-5 text-accent flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>Predicción IA avanzada (12 meses)</li>
+          <li class="flex items-start gap-2 text-sm text-blue-100"><svg class="w-5 h-5 text-accent flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>Presentación telemática incluida</li>
+          <li class="flex items-start gap-2 text-sm text-blue-100"><svg class="w-5 h-5 text-accent flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>Escenarios what-if configurables</li>
+        </ul>
+        <a href="#contact" class="block text-center py-3 px-6 bg-white text-primary hover:bg-blue-50 font-semibold rounded-xl transition-colors text-sm">Solicitar demo</a>
+      </div>
+
+      <!-- Enterprise -->
+      <div class="card-hover border border-slate-200 rounded-2xl p-8 flex flex-col">
+        <div class="mb-6">
+          <h3 class="font-bold text-dark text-lg">Enterprise</h3>
+          <p class="text-slate-400 text-sm mt-1">Para grandes grupos y redes</p>
+          <div class="mt-5">
+            <span class="text-4xl font-extrabold text-dark">A medida</span>
+          </div>
+        </div>
+        <ul class="space-y-3 flex-1 mb-8">
+          <li class="flex items-start gap-2 text-sm text-slate-600"><svg class="w-5 h-5 text-emerald-500 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>Todo lo de Pro incluido</li>
+          <li class="flex items-start gap-2 text-sm text-slate-600"><svg class="w-5 h-5 text-emerald-500 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>SLA garantizado 99.9%</li>
+          <li class="flex items-start gap-2 text-sm text-slate-600"><svg class="w-5 h-5 text-emerald-500 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>Onboarding personalizado</li>
+          <li class="flex items-start gap-2 text-sm text-slate-600"><svg class="w-5 h-5 text-emerald-500 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>Integraciones custom</li>
+          <li class="flex items-start gap-2 text-sm text-slate-600"><svg class="w-5 h-5 text-emerald-500 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>Soporte dedicado 24/7</li>
+        </ul>
+        <a href="#contact" class="block text-center py-3 px-6 border border-secondary text-secondary hover:bg-secondary hover:text-white font-semibold rounded-xl transition-colors text-sm">Contactar ventas</a>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ─────────────────────────────────────────────
+     FOOTER / CONTACTO
+───────────────────────────────────────────── -->
+<footer id="contact" class="bg-dark text-white">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+    <div class="grid lg:grid-cols-2 gap-16 mb-16">
+
+      <!-- Contacto form -->
+      <div>
+        <h2 class="text-3xl font-extrabold mb-3">¿Hablamos?</h2>
+        <p class="text-slate-400 mb-8">Cuéntanos tu caso y te preparamos una demo personalizada en menos de 24 h.</p>
+        <form id="contact-form" class="space-y-4" onsubmit="handleSubmit(event)">
+          <div class="grid sm:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-sm text-slate-400 mb-1.5">Nombre</label>
+              <input type="text" name="name" required placeholder="Ana García"
+                class="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-3 text-white placeholder-slate-500 text-sm focus:outline-none focus:border-secondary focus:ring-1 focus:ring-secondary transition-colors" />
+            </div>
+            <div>
+              <label class="block text-sm text-slate-400 mb-1.5">Email</label>
+              <input type="email" name="email" required placeholder="ana@asesoria.com"
+                class="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-3 text-white placeholder-slate-500 text-sm focus:outline-none focus:border-secondary focus:ring-1 focus:ring-secondary transition-colors" />
+            </div>
+          </div>
+          <div>
+            <label class="block text-sm text-slate-400 mb-1.5">Empresa</label>
+            <input type="text" name="company" placeholder="Asesoría García & Asociados"
+              class="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-3 text-white placeholder-slate-500 text-sm focus:outline-none focus:border-secondary focus:ring-1 focus:ring-secondary transition-colors" />
+          </div>
+          <div>
+            <label class="block text-sm text-slate-400 mb-1.5">Mensaje</label>
+            <textarea name="message" rows="4" placeholder="¿Cuántas empresas gestionáis? ¿Qué ERP usáis?"
+              class="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-3 text-white placeholder-slate-500 text-sm focus:outline-none focus:border-secondary focus:ring-1 focus:ring-secondary transition-colors resize-none"></textarea>
+          </div>
+          <button type="submit"
+            class="w-full py-3 px-6 bg-secondary hover:bg-blue-600 text-white font-semibold rounded-xl transition-colors text-sm flex items-center justify-center gap-2">
+            Solicitar demo gratuita
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+            </svg>
+          </button>
+          <div id="form-success" class="hidden bg-emerald-900/40 border border-emerald-600/30 rounded-xl px-4 py-3 text-emerald-400 text-sm text-center">
+            ¡Mensaje enviado! Te contactaremos en menos de 24 h.
+          </div>
+        </form>
+      </div>
+
+      <!-- Company info -->
+      <div class="flex flex-col gap-8">
+        <div>
+          <div class="flex items-center gap-2 mb-4">
+            <div class="w-8 h-8 bg-secondary rounded-lg flex items-center justify-center">
+              <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+              </svg>
+            </div>
+            <span class="text-white font-bold text-lg">Fincore <span class="text-accent">AI</span></span>
+          </div>
+          <p class="text-slate-400 text-sm leading-relaxed max-w-sm">
+            Tus datos financieros, unificados e inteligentes.<br/>
+            La plataforma que conecta tus ERPs, predice tu futuro financiero y simplifica los modelos tributarios.
+          </p>
+        </div>
+
+        <!-- Links -->
+        <div class="grid grid-cols-2 gap-8">
+          <div>
+            <h4 class="text-white font-semibold text-sm mb-4">Producto</h4>
+            <ul class="space-y-2">
+              <li><a href="#features"      class="text-slate-400 hover:text-white text-sm transition-colors">Características</a></li>
+              <li><a href="#integrations"  class="text-slate-400 hover:text-white text-sm transition-colors">Integraciones</a></li>
+              <li><a href="#pricing"       class="text-slate-400 hover:text-white text-sm transition-colors">Precios</a></li>
+              <li><a href="#contact"       class="text-slate-400 hover:text-white text-sm transition-colors">Demo</a></li>
+            </ul>
+          </div>
+          <div>
+            <h4 class="text-white font-semibold text-sm mb-4">Legal</h4>
+            <ul class="space-y-2">
+              <li><a href="#" class="text-slate-400 hover:text-white text-sm transition-colors">Aviso legal</a></li>
+              <li><a href="#" class="text-slate-400 hover:text-white text-sm transition-colors">Política de privacidad</a></li>
+              <li><a href="#" class="text-slate-400 hover:text-white text-sm transition-colors">Política de cookies</a></li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Social -->
+        <div>
+          <h4 class="text-white font-semibold text-sm mb-4">Síguenos</h4>
+          <div class="flex gap-3">
+            <a href="#" class="w-9 h-9 bg-slate-800 hover:bg-secondary rounded-lg flex items-center justify-center transition-colors">
+              <!-- LinkedIn -->
+              <svg class="w-4 h-4 text-slate-400" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
+              </svg>
+            </a>
+            <a href="#" class="w-9 h-9 bg-slate-800 hover:bg-secondary rounded-lg flex items-center justify-center transition-colors">
+              <!-- X/Twitter -->
+              <svg class="w-4 h-4 text-slate-400" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+              </svg>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bottom bar -->
+    <div class="border-t border-slate-800 pt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+      <p class="text-slate-500 text-sm">© 2026 Fincore AI. Todos los derechos reservados.</p>
+      <p class="text-slate-600 text-xs">Hecho con ❤ en España</p>
+    </div>
+  </div>
+</footer>
+
+<!-- ─────────────────────────────────────────────
+     JS
+───────────────────────────────────────────── -->
+<script>
+  // Mobile menu toggle
+  const menuBtn = document.getElementById('menu-btn');
+  const mobileMenu = document.getElementById('mobile-menu');
+  const iconOpen = document.getElementById('icon-open');
+  const iconClose = document.getElementById('icon-close');
+
+  menuBtn.addEventListener('click', () => {
+    const open = mobileMenu.classList.toggle('hidden');
+    iconOpen.classList.toggle('hidden', !open);
+    iconClose.classList.toggle('hidden', open);
+  });
+
+  function closeMenu() {
+    mobileMenu.classList.add('hidden');
+    iconOpen.classList.remove('hidden');
+    iconClose.classList.add('hidden');
+  }
+
+  // Pricing toggle
+  let billing = 'monthly';
+  function setBilling(mode) {
+    billing = mode;
+    const btnMonthly = document.getElementById('btn-monthly');
+    const btnAnnual  = document.getElementById('btn-annual');
+    if (mode === 'monthly') {
+      btnMonthly.classList.add('bg-white', 'text-dark', 'shadow-sm');
+      btnMonthly.classList.remove('text-slate-500');
+      btnAnnual.classList.remove('bg-white', 'text-dark', 'shadow-sm');
+      btnAnnual.classList.add('text-slate-500');
+    } else {
+      btnAnnual.classList.add('bg-white', 'text-dark', 'shadow-sm');
+      btnAnnual.classList.remove('text-slate-500');
+      btnMonthly.classList.remove('bg-white', 'text-dark', 'shadow-sm');
+      btnMonthly.classList.add('text-slate-500');
+    }
+    document.querySelectorAll('.price').forEach(el => {
+      const price = mode === 'monthly' ? el.dataset.monthly : el.dataset.annual;
+      if (price) el.textContent = '€' + price;
+    });
+  }
+
+  // Contact form
+  function handleSubmit(e) {
+    e.preventDefault();
+    const form = document.getElementById('contact-form');
+    const success = document.getElementById('form-success');
+    // Construye mailto como fallback
+    const data = new FormData(form);
+    const name    = data.get('name');
+    const email   = data.get('email');
+    const company = data.get('company') || '-';
+    const message = data.get('message') || '-';
+    const subject = encodeURIComponent('Demo Fincore AI — ' + name);
+    const body    = encodeURIComponent(`Nombre: ${name}\nEmail: ${email}\nEmpresa: ${company}\n\n${message}`);
+    window.location.href = `mailto:contacto@fincoreai.com?subject=${subject}&body=${body}`;
+    form.reset();
+    success.classList.remove('hidden');
+    setTimeout(() => success.classList.add('hidden'), 6000);
+  }
+
+  // Navbar shadow on scroll
+  window.addEventListener('scroll', () => {
+    const nav = document.getElementById('navbar');
+    if (window.scrollY > 10) {
+      nav.classList.add('shadow-lg', 'shadow-black/20');
+    } else {
+      nav.classList.remove('shadow-lg', 'shadow-black/20');
+    }
+  });
+</script>
+
+</body>
+</html>
